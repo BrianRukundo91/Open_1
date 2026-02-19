@@ -1,0 +1,17 @@
+This is a sample DOCX document for testing purposes.
+
+Content:
+
+Sample Word Document
+
+This is a test document in DOCX format.
+
+Test Information:
+- Format: DOCX (Office Open XML)
+- Purpose: File upload testing
+- File Type: Document
+
+Sample Text:
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+Note: This is a simplified DOCX file for testing. Real DOCX files contain XML and ZIP compression.

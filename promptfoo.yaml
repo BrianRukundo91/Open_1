@@ -1,0 +1,189 @@
+name: Document Chat AI Response Evaluation
+description: Comprehensive evaluation of AI chatbot responses for relevance, accuracy, and quality
+
+providers:
+  - id: document-chat-api
+    type: http
+    config:
+      baseUrl: http://localhost:3000
+      method: POST
+      endpoint: /api/chat
+      timeout: 30000
+
+testCases:
+  # TASK 6.1: General Relevance Testing
+  - name: "General content question"
+    vars:
+      message: "What is this document about?"
+    evaluators:
+      - type: llm-rubric
+        model: gpt-4
+        rubric: "Score the relevance of this response to the question on a scale of 1-5. 1=not relevant, 5=highly relevant and directly answers the question."
+      - type: length
+        min: 20
+        max: 5000
+
+  - name: "Main topic identification"
+    vars:
+      message: "What is the main topic of this document?"
+    evaluators:
+      - type: factuality
+      - type: contains
+        value: "topic|subject|about|discusses"
+
+  # TASK 6.2: Specific Details Extraction
+  - name: "Specific details query"
+    vars:
+      message: "What specific details are mentioned in the document?"
+    evaluators:
+      - type: llm-rubric
+        model: gpt-4
+        rubric: "Evaluate if the response provides specific, concrete details from the document (1-5). 1=vague, 5=specific with details."
+
+  - name: "Numbers and values"
+    vars:
+      message: "What numbers or values are mentioned in the document?"
+    evaluators:
+      - type: llm-rubric
+        model: gpt-4
+        rubric: "Check if response contains actual numbers/values from document (1-5)"
+
+  - name: "Key information summary"
+    vars:
+      message: "Can you list the key information from this document?"
+    evaluators:
+      - type: length
+        min: 50
+      - type: llm-rubric
+        model: gpt-4
+        rubric: "Score completeness of key information listed (1-5)"
+
+  - name: "Entity identification"
+    vars:
+      message: "Who or what entities are mentioned in the document?"
+    evaluators:
+      - type: factuality
+      - type: llm-rubric
+        model: gpt-4
+        rubric: "Evaluate if entities mentioned match document content (1-5)"
+
+  # TASK 6.3: Graceful Handling of Out-of-Scope Questions
+  - name: "Non-existent content - Space travel"
+    vars:
+      message: "Does this document mention anything about space travel?"
+    evaluators:
+      - type: contains
+        value: "does not|not found|no mention|not mentioned|not discussed|not present"
+      - type: llm-rubric
+        model: gpt-4
+        rubric: "Score how gracefully the AI handled an out-of-scope question (1-5). 5=politely indicates content not in document"
+
+  - name: "Non-existent content - Quantum computing"
+    vars:
+      message: "Are there any references to quantum computing in this document?"
+    evaluators:
+      - type: contains
+        value: "does not|not found|no mention|not mentioned"
+      - type: factuality
+
+  - name: "Non-existent content - Ancient Egypt"
+    vars:
+      message: "What does the document say about ancient Egyptian history?"
+    evaluators:
+      - type: llm-rubric
+        model: gpt-4
+        rubric: "Did the AI gracefully indicate the topic isn't in the document? (1-5)"
+
+  - name: "Handling irrelevant query"
+    vars:
+      message: "Can you explain quantum mechanics based on this document?"
+    evaluators:
+      - type: contains
+        value: "does not|not found|not mentioned|cannot"
+
+  # TASK 6.4: Accuracy and No Hallucinations
+  - name: "Quote extraction"
+    vars:
+      message: "Provide an exact quote from this document"
+    evaluators:
+      - type: factuality
+      - type: llm-rubric
+        model: gpt-4
+        rubric: "Is the quote actually from the document or fabricated? (1=fabricated, 5=accurate quote)"
+
+  - name: "No fabrication - specific fact"
+    vars:
+      message: "What is mentioned about transactions in this document?"
+    evaluators:
+      - type: factuality
+      - type: llm-rubric
+        model: gpt-4
+        rubric: "Check if response contains facts, not invented information (1-5)"
+
+  # TASK 6.5: Consistency
+  - name: "Summary consistency - first request"
+    vars:
+      message: "Summarize this document in 2-3 sentences"
+    evaluators:
+      - type: length
+        min: 30
+        max: 500
+      - type: contains
+        value: "document"
+
+  - name: "Summary consistency - second request"
+    vars:
+      message: "Can you give me a brief summary of this document?"
+    evaluators:
+      - type: length
+        min: 30
+        max: 500
+      - type: llm-rubric
+        model: gpt-4
+        rubric: "Is this a high-quality summary that captures main points? (1-5)"
+
+  # Additional Quality Checks
+  - name: "Response clarity"
+    vars:
+      message: "What is the purpose of this document?"
+    evaluators:
+      - type: llm-rubric
+        model: gpt-4
+        rubric: "Evaluate response clarity and proper grammar (1-5). 1=unclear/errors, 5=very clear and professional"
+
+  - name: "Contextual relevance"
+    vars:
+      message: "How does all the information in this document relate to each other?"
+    evaluators:
+      - type: llm-rubric
+        model: gpt-4
+        rubric: "Does response show understanding of document relationships? (1-5)"
+
+  - name: "Completeness of answer"
+    vars:
+      message: "List all the main concepts discussed in this document"
+    evaluators:
+      - type: length
+        min: 50
+      - type: llm-rubric
+        model: gpt-4
+        rubric: "Does the list cover major concepts from document? (1-5)"
+
+  - name: "Information accuracy"
+    vars:
+      message: "What is the chronological order of events in this document?"
+    evaluators:
+      - type: factuality
+      - type: llm-rubric
+        model: gpt-4
+        rubric: "Are chronological details accurate to source material? (1-5)"
+
+# Output and reporting configuration
+outputPath: ./promptfoo-results
+writeLatestResults: true
+
+# Summary metrics to display
+summary:
+  - type: pass-fail
+  - type: average-score
+  - type: percentile

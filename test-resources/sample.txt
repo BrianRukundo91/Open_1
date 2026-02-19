@@ -1,0 +1,25 @@
+Sample Test Document
+
+This is a sample text document used for testing file upload functionality.
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+
+Test Cases:
+- Single file upload
+- Multiple file uploads
+- File type verification
+- Document list verification
+
+Transaction Details:
+Total Amount: AED 100.0
+Status: Successful
+Transaction Date: 15 Jan 2025
+Reference Number: 530PE3C6A5E5E800
+Currency: AED
+Beneficiary: Test User
+
+Banks Mentioned:
+1. Bank A
+2. Bank B
