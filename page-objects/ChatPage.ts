@@ -1,22 +1,155 @@
-import { Page } from "playwright";
-import { expect, request } from "@playwright/test";
+import { Page, expect, request } from "@playwright/test";
 
 export class ChatPage {
-    readonly page: Page
+    readonly page: Page;
 
     constructor(page: Page) {
-        this.page = page
+        this.page = page;
+    }
+
+    // ── UI Helpers ──────────────────────────────────────────────
+
+    /**
+     * Verify the chat interface is visible and ready for input
+     */
+    async verifyChatIsReady(): Promise<void> {
+        const messageInput = this.page.getByRole('textbox', { name: /Ask a question/i });
+        await expect(messageInput).toBeVisible({ timeout: 5000 });
+        await expect(messageInput).toBeEnabled();
     }
 
     /**
-     * Verify the chat interface loads correctly
+     * Send a message to the chatbot
      */
-    async verifyChatInterfaceLoads(): Promise<boolean> {
-        // Wait for chat container to be visible
-        const chatContainer = this.page.locator('[role="region"], .chat, [class*="chat"]').first();
-        
+    async sendMessage(question: string): Promise<void> {
+        const messageInput = this.page.getByRole('textbox', { name: /Ask a question/i });
+        await messageInput.fill(question);
+        await this.page.locator('[data-testid="send-button"]').click();
+    }
+
+    /**
+     * Wait for the latest AI response to appear in the DOM
+     */
+    async waitForAIResponse(timeout: number = 30000): Promise<void> {
+        await this.page.locator('div.rounded-2xl.px-4.py-3')
+            .first()
+            .waitFor({ state: 'visible', timeout });
+    }
+
+  /**
+ * Get the latest AI response text from the DOM
+ */
+async getLatestResponseFromDOM(): Promise<string> {
+    const aiMessages = this.page.locator('div.rounded-2xl.px-4.py-3.bg-card');
+    const count = await aiMessages.count();
+    return await aiMessages.nth(count - 1).locator('p').textContent() || '';
+}
+
+    /**
+     * Get total number of message bubbles in the conversation
+     */
+    async getMessageCount(): Promise<number> {
+        return await this.page.locator('div.rounded-2xl.px-4.py-3').count();
+    }
+
+    // ── API Helpers ─────────────────────────────────────────────
+
+    /**
+     * Get all messages from chat history via API
+     */
+    async getChatHistoryViaAPI(): Promise<any[]> {
+        const apiContext = await request.newContext({ baseURL: 'http://localhost:3000' });
+        const response = await apiContext.get('/api/messages');
+        expect(response.ok()).toBeTruthy();
+        const data = await response.json();
+        await apiContext.dispose();
+        return Array.isArray(data.messages) ? data.messages : [];
+    }
+
+    /**
+     * Get the latest AI message content via API
+     */
+    async getLatestAIResponseViaAPI(): Promise<string> {
+        const messages = await this.getChatHistoryViaAPI();
+        for (let i = messages.length - 1; i >= 0; i--) {
+            if (messages[i].role === 'ai' || messages[i].role === 'assistant') {
+                return messages[i].content || '';
+            }
+        }
+        return '';
+    }
+
+    /**
+     * Get uploaded documents via API
+     */
+    async getDocumentsViaAPI(): Promise<any[]> {
+        const response = await this.page.request.get('http://localhost:3000/api/documents');
+        const data: any = await response.json();
+        return data.documents || [];
+    }
+
+    /**
+     * Clear all documents via API
+     */
+    async clearAllDocumentsViaAPI(): Promise<void> {
+        await this.page.request.delete('http://localhost:3000/api/documents');
+    }
+
+    /**
+     * Verify at least one document is uploaded via API
+     */
+    async verifyDocumentUploaded(): Promise<void> {
+        const docs = await this.getDocumentsViaAPI();
+        expect(docs.length).toBeGreaterThan(0);
+    }
+
+    // ── High-Level Actions ───────────────────────────────────────
+
+    /**
+     * Ask a single question and assert the response contains expected text
+     */
+    async askSingleQuestion(question: string, expectedAnswer: string): Promise<void> {
+        await this.sendMessage(question);
+        await this.waitForAIResponse();
+        expect(await this.getLatestResponseFromDOM()).toContain(expectedAnswer);
+    }
+
+    /**
+     * Ask multiple questions and assert each response (soft assertions)
+     */
+  async askMultipleQuestions(questionsAndAnswers: Array<{ question: string; expected: string }>): Promise<void> {
+    for (const { question, expected } of questionsAndAnswers) {
+        const beforeCount = await this.page.locator('div.rounded-2xl.px-4.py-3.bg-card').count();
+        await this.sendMessage(question);
+
+        await this.page.waitForFunction(
+            (count) => document.querySelectorAll('div.rounded-2xl.px-4.py-3.bg-card').length > count,
+            beforeCount,
+            { timeout: 60000 }
+        );
+
+        expect.soft(await this.getLatestResponseFromDOM()).toContain(expected);
+        await this.page.waitForTimeout(3000);
+    }
+}
+
+    /**
+     * Ask questions without assertions (for exploratory or concept questions)
+     */
+    async askQuestionsWithoutValidation(questions: string[]): Promise<void> {
+        for (const question of questions) {
+            await this.sendMessage(question);
+            await this.waitForAIResponse();
+        }
+    }
+    
+    /**
+     * Ask a question and wait for response without asserting content
+     */
+    async askQuestionAndWait(question: string, timeout: number = 10000): Promise<boolean> {
+        await this.sendMessage(question);
         try {
-            await chatContainer.waitFor({ state: 'visible', timeout: 5000 });
+            await this.waitForAIResponse(timeout);
             return true;
         } catch {
             return false;
@@ -24,236 +157,36 @@ export class ChatPage {
     }
 
     /**
-     * Verify chat interface is ready for input
-     */
-    async verifyChatIsReadyForInput(): Promise<boolean> {
-        // Look for message input field
-        const messageInput = this.page.locator(
-            'input[role="textbox"], textarea, [contenteditable="true"]'
-        ).first();
-        
-        try {
-            await messageInput.waitFor({ state: 'visible', timeout: 5000 });
-            return await messageInput.isEnabled();
-        } catch {
+
+    /**
+ * Verify response contains all expected keywords via API
+ */
+async verifyResponseContainsKeywords(expectedKeywords: string[]): Promise<void> {
+    await this.page.waitForFunction(
+        async () => {
+            const response = await fetch('http://localhost:3000/api/messages');
+            const data = await response.json();
+            const messages = data.messages || [];
+            for (let i = messages.length - 1; i >= 0; i--) {
+                if (messages[i].role === 'ai' || messages[i].role === 'assistant') {
+                    return messages[i].content !== '';
+                }
+            }
             return false;
-        }
+        },
+        { timeout: 15000 }
+    );
+
+    const response = await this.getLatestAIResponseViaAPI();
+    for (const keyword of expectedKeywords) {
+        expect(response.toLowerCase()).toContain(keyword.toLowerCase());
     }
+}
 
     /**
-     * Send a message to the chatbot
-     * @param question The question/message to send
+     * Setup: clear documents before each test
      */
-    async sendMessage(question: string): Promise<void> {
-        // Find and fill the message input
-        const messageInput = this.page.locator(
-            'input[role="textbox"], textarea, [contenteditable="true"], [class*="input"]'
-        ).first();
-        
-        await messageInput.fill(question);
-        
-        // Find and click send button
-        const sendButton = this.page.locator(
-            'button:has-text("Send"), button:has-text("Ask"), button[type="submit"], button svg.lucide-send'
-        ).first();
-        
-        await sendButton.click();
-        
-        // Wait for response
-        await this.page.waitForTimeout(2000);
-    }
-
-    /**
-     * Send message via API directly
-     * Task 5: Send multiple questions programmatically
-     */
-    async sendMessageViaAPI(question: string, documentId?: string): Promise<any> {
-        const apiContext = await request.newContext({
-            baseURL: 'http://localhost:3000',
-        });
-
-        const payload: any = {
-            message: question,
-        };
-
-        if (documentId) {
-            payload.documentId = documentId;
-        }
-
-        const response = await apiContext.post('/api/chat', {
-            data: payload,
-        });
-
-        expect(response.ok()).toBeTruthy();
-        const result = await response.json();
-
-        await apiContext.dispose();
-        return result;
-    }
-
-    /**
-     * Get latest chatbot response from UI
-     */
-    async getLatestResponse(): Promise<string> {
-        // Get all chat messages
-        const messages = this.page.locator(
-            '[role="region"] [class*="message"], .chat-message, [class*="response"]'
-        );
-        
-        const count = await messages.count();
-        
-        if (count > 0) {
-            const lastMessage = messages.last();
-            const text = await lastMessage.textContent();
-            return text ? text.trim() : '';
-        }
-        
-        return '';
-    }
-
-    /**
-     * Get all chat messages from the conversation
-     */
-    async getAllMessages(): Promise<string[]> {
-        const messages = this.page.locator(
-            '[role="region"] [class*="message"], .chat-message, [class*="response"]'
-        );
-        
-        const messageTexts: string[] = [];
-        const count = await messages.count();
-
-        for (let i = 0; i < count; i++) {
-            const text = await messages.nth(i).textContent();
-            if (text) {
-                messageTexts.push(text.trim());
-            }
-        }
-
-        return messageTexts;
-    }
-
-    /**
-     * Get chat history via API
-     * Task 7: Retrieve conversation history
-     */
-    async getChatHistoryViaAPI(): Promise<any[]> {
-        const apiContext = await request.newContext({
-            baseURL: 'http://localhost:3000',
-        });
-
-        const response = await apiContext.get('/api/messages');
-        expect(response.ok()).toBeTruthy();
-        
-        const messages = await response.json();
-
-        await apiContext.dispose();
-        return messages;
-    }
-
-    /**
-     * Verify response contains expected keywords
-     * Task 6: Basic response validation
-     */
-    async verifyResponseContainsKeywords(expectedKeywords: string[]): Promise<boolean> {
-        const response = await this.getLatestResponse();
-        
-        return expectedKeywords.every(keyword => 
-            response.toLowerCase().includes(keyword.toLowerCase())
-        );
-    }
-
-    /**
-     * Ask multiple questions in sequence
-     * Task 5: Ask 5+ questions
-     */
-    async askMultipleQuestions(questions: string[]): Promise<void> {
-        for (const question of questions) {
-            await this.sendMessage(question);
-            await this.page.waitForTimeout(3000); // Wait for response
-        }
-    }
-
-    /**
-     * Ask multiple questions via API
-     * Task 5: Programmatic questioning
-     */
-    async askMultipleQuestionsViaAPI(questions: string[]): Promise<any[]> {
-        const responses: any[] = [];
-
-        for (const question of questions) {
-            const response = await this.sendMessageViaAPI(question);
-            responses.push(response);
-        }
-
-        return responses;
-    }
-
-    /**
-     * Verify chat is visible and functional
-     */
-    async isChatFunctional(): Promise<boolean> {
-        const isLoaded = await this.verifyChatInterfaceLoads();
-        const isReady = await this.verifyChatIsReadyForInput();
-        
-        return isLoaded && isReady;
-    }
-
-    /**
-     * Clear chat history (if available in UI)
-     */
-    async clearChatHistory(): Promise<void> {
-        const clearButton = this.page.locator(
-            'button:has-text("Clear"), button:has-text("Reset"), button:has-text("New Chat")'
-        ).first();
-        
-        if (await clearButton.count() > 0) {
-            await clearButton.click();
-            await this.page.waitForTimeout(1000);
-        }
-    }
-
-    /**
-     * Get message count from conversation
-     */
-    async getMessageCount(): Promise<number> {
-        const messages = this.page.locator(
-            '[role="region"] [class*="message"], .chat-message, [class*="response"]'
-        );
-        
-        return await messages.count();
-    }
-
-    /**
-     * Wait for AI response (with timeout)
-     * Task 6: Wait for response generation
-     */
-    async waitForAIResponse(timeout: number = 15000): Promise<boolean> {
-        const initialCount = await this.getMessageCount();
-        let elapsedTime = 0;
-        
-        while (elapsedTime < timeout) {
-            const currentCount = await this.getMessageCount();
-            
-            if (currentCount > initialCount) {
-                return true;
-            }
-            
-            await this.page.waitForTimeout(500);
-            elapsedTime += 500;
-        }
-        
-        return false;
-    }
-
-    /**
-     * Verify chat handles non-document questions gracefully
-     * Task 6: Test irrelevant questions
-     */
-    async verifyIrrelevantQuestionHandling(irrelevantQuestion: string): Promise<string> {
-        await this.sendMessage(irrelevantQuestion);
-        await this.waitForAIResponse(15000);
-        
-        const response = await this.getLatestResponse();
-        return response;
+    async setup(): Promise<void> {
+        await this.clearAllDocumentsViaAPI();
     }
 }

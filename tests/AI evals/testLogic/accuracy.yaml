@@ -1,0 +1,52 @@
+- description: "Correctly identifies total amount paid"
+  vars:
+    question: "What is the total amount paid in the receipt?"
+  assert:
+    - type: icontains
+      value: "212.40"
+
+- description: "Correctly identifies customer name"
+  vars:
+    question: "Who is the customer on this receipt?"
+  assert:
+    - type: icontains
+      value: "Jane Smith"
+
+- description: "Correctly identifies payment method"
+  vars:
+    question: "How was the payment made?"
+  assert:
+    - type: icontains
+      value: "Mobile Money"
+
+- description: "Correctly identifies merchant name"
+  vars:
+    question: "Who is the merchant on this receipt?"
+  assert:
+    - type: icontains
+      value: "Innovuard"
+
+- description: "Correctly identifies items purchased"
+  vars:
+    question: "What items were purchased?"
+  assert:
+    - type: icontains
+      value: "Asset Registration Service"
+    - type: icontains
+      value: "Equipment Tagging Kit"
+    - type: icontains
+      value: "Annual Maintenance Plan"
+
+- description: "Correctly identifies transaction ID"
+  vars:
+    question: "What is the transaction ID?"
+  assert:
+    - type: icontains
+      value: "TXN-2026-00045"
+
+- description: "Correctly identifies tax amount"
+  vars:
+    question: "How much tax was charged?"
+  assert:
+    - type: icontains
+      value: "32.40"

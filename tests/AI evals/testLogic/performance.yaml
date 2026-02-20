@@ -1,0 +1,20 @@
+- description: "Response time is under 10 seconds for simple question"
+  vars:
+    question: "What is the total amount paid?"
+  assert:
+    - type: latency
+      threshold: 10000
+
+- description: "Response time is under 10 seconds for complex question"
+  vars:
+    question: "Can you summarize all the key details from the document?"
+  assert:
+    - type: latency
+      threshold: 10000
+
+- description: "Response time is under 10 seconds for fallback question"
+  vars:
+    question: "What is the recipe for chocolate cake?"
+  assert:
+    - type: latency
+      threshold: 10000

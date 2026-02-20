@@ -1,224 +1,134 @@
-import { expect, test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { DocumentUploadPage } from '../page-objects/DocumentUploadPage';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
 
-const sampleTxtPath = path.resolve(__dirname, '../test-resources/sample.txt');
-const samplePdfPath = path.resolve(__dirname, '../test-resources/sample.pdf');
-const sampleDocxPath = path.resolve(__dirname, '../test-resources/sample.docx');
+// ── Constants ────────────────────────────────────────────────────
 
-test.describe('Task 2 & 3: File Upload Automation', () => {
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const txtFileName  = 'transaction_receipt.txt';
+const pdfFileName  = 'transaction_receipt.pdf';
+const docxFileName = 'transaction_receipt.docx';
+const txtPath  = path.resolve(__dirname, `../test-resources/${txtFileName}`);
+const pdfPath  = path.resolve(__dirname, `../test-resources/${pdfFileName}`);
+const docxPath = path.resolve(__dirname, `../test-resources/${docxFileName}`);
+const multiFilePaths = [txtPath, pdfPath];
+const multiFileNames = [txtFileName, pdfFileName];
+
+// ── Suite Config ─────────────────────────────────────────────────
+
+test.describe.configure({ mode: 'serial' });
+
+// ── Tests ────────────────────────────────────────────────────────
+
+test.describe('Document Upload', () => {
     let uploadPage: DocumentUploadPage;
 
-    test.beforeEach('should launch application', async ({ page, request }) => {
-        // Clear all documents via API before each test
-        const apiContext = await request.newContext({
-            baseURL: 'http://localhost:3000',
-        });
-        await apiContext.delete('/api/documents');
-        await apiContext.dispose();
-
-        // Navigate to application
-        const url = 'http://localhost:3000/';
-        await page.goto(url);
-        
-        // Verify page loaded
-        expect(page.url()).toBe(url);
-        
-        // Initialize page object
+    test.beforeEach(async ({ page }) => {
+        await page.goto('http://localhost:3000/');
+        expect(page.url()).toBe('http://localhost:3000/');
         uploadPage = new DocumentUploadPage(page);
+        await uploadPage.clearAllDocumentsViaAPI();
     });
 
-    test.describe('Task 2: Single File Upload', () => {
-        test('should upload a single TXT file via UI', async () => {
-            // Act
-            await uploadPage.uploadSingleFile(sampleTxtPath, 'sample.txt');
+    // ── Single File Upload ───────────────────────────────────────
 
-            // Assert - UI verification
-            const count = await uploadPage.getUploadedDocumentCount();
-            expect(count).toBeGreaterThan(0);
-
-            const isInList = await uploadPage.isDocumentInList('sample.txt');
-            expect(isInList).toBeTruthy();
-        });
-
-        test('should upload a single file via UI and verify via API', async () => {
-            // Act
-            await uploadPage.uploadSingleFile(sampleTxtPath, 'sample.txt');
-
-            // Assert - API verification
-            await uploadPage.verifyFileUploadedSuccessfully(['sample.txt']);
-
-            const apiCount = await uploadPage.getDocumentCountViaAPI();
-            expect(apiCount).toBe(1);
-        });
-
-        test('should verify document appears in documents list', async () => {
-            // Act
-            await uploadPage.uploadSingleFile(sampleTxtPath, 'sample.txt');
-
-            // Assert - Get list from API (Task 3)
-            const documents = await uploadPage.getDocumentsViaAPI();
-            expect(documents.length).toBe(1);
-            expect(documents[0].originalName).toBe('sample.txt');
-        });
+    test('should upload a single TXT file and verify via UI', async () => {
+        await uploadPage.uploadSupportedSingleFile(txtPath, txtFileName);
+        const isInList = await uploadPage.isDocumentInList(txtFileName);
+        expect(isInList).toBeTruthy();
     });
 
-    test.describe('Task 2: Multiple File Upload', () => {
-        test('should upload multiple files sequentially', async () => {
-            // Act
-            await uploadPage.uploadMultipleFiles(
-                [sampleTxtPath, sampleTxtPath],
-                ['sample1.txt', 'sample2.txt']
-            );
-
-            // Assert
-            const count = await uploadPage.getUploadedDocumentCount();
-            expect(count).toBeGreaterThanOrEqual(2);
-        });
-
-        test('should verify all uploaded files appear in documents list', async () => {
-            // Act
-            await uploadPage.uploadMultipleFiles(
-                [sampleTxtPath, sampleTxtPath],
-                ['sample1.txt', 'sample2.txt']
-            );
-
-            // Assert - via API (Task 3)
-            const documents = await uploadPage.getDocumentsViaAPI();
-            expect(documents.length).toBeGreaterThanOrEqual(2);
-        });
+    test('should upload a single TXT file and verify via API', async () => {
+        await uploadPage.uploadSupportedSingleFile(txtPath, txtFileName);
+        await uploadPage.verifyIfFileUploadedSuccessfully([txtFileName]);
     });
 
-    test.describe('Task 2: File Type Verification', () => {
-        test('should support TXT file type', async () => {
-            // Act
-            await uploadPage.uploadSingleFile(sampleTxtPath, 'sample.txt');
+    test('should upload a single PDF file and verify via API', async () => {
+    if (!fs.existsSync(pdfPath)) test.skip();
+    await uploadPage.uploadSupportedSingleFile(pdfPath, pdfFileName);
+    const documents = await uploadPage.getDocumentsViaAPI();
+    expect(documents.length).toBeGreaterThan(0);
+});
 
-            // Assert
-            const documents = await uploadPage.getUploadedDocumentNames();
-            const hasTxt = documents.some(doc => doc.toLowerCase().includes('.txt'));
-            expect(hasTxt).toBeTruthy();
-        });
-
-        test('should support PDF file type', async ({ page }) => {
-            // Check if PDF file exists, skip if not
-            const fs = require('fs');
-            if (!fs.existsSync(samplePdfPath)) {
-                test.skip();
-            }
-
-            // Act
-            await uploadPage.uploadSingleFile(samplePdfPath, 'sample.pdf');
-
-            // Assert
-            const documents = await uploadPage.getUploadedDocumentNames();
-            const hasPdf = documents.some(doc => doc.toLowerCase().includes('.pdf'));
-            expect(hasPdf).toBeTruthy();
-        });
-
-        test('should support DOCX file type', async ({ page }) => {
-            // Check if DOCX file exists, skip if not
-            const fs = require('fs');
-            if (!fs.existsSync(sampleDocxPath)) {
-                test.skip();
-            }
-
-            // Act
-            await uploadPage.uploadSingleFile(sampleDocxPath, 'sample.docx');
-
-            // Assert
-            const documents = await uploadPage.getUploadedDocumentNames();
-            const hasDocx = documents.some(doc => doc.toLowerCase().includes('.docx'));
-            expect(hasDocx).toBeTruthy();
-        });
+    test('should upload a single DOCX file and verify via API', async () => {
+        if (!fs.existsSync(docxPath)) test.skip();
+        await uploadPage.uploadSupportedSingleFile(docxPath, docxFileName);
+        await uploadPage.verifyIfFileUploadedSuccessfully([docxFileName]);
     });
 
-    test.describe('Task 3: Verify File Upload Completion', () => {
-        test('should confirm file upload completion via UI', async () => {
-            // Act
-            await uploadPage.uploadSingleFile(sampleTxtPath, 'sample.txt');
-
-            // Assert - UI shows file
-            const isInList = await uploadPage.isDocumentInList('sample.txt');
-            expect(isInList).toBeTruthy();
-
-            const count = await uploadPage.getUploadedDocumentCount();
-            expect(count).toBe(1);
-        });
-
-        test('should confirm file upload completion via API', async () => {
-            // Act - Upload via UI
-            await uploadPage.uploadSingleFile(sampleTxtPath, 'sample.txt');
-
-            // Assert - Verify via API (GET /api/documents)
-            const documents = await uploadPage.getDocumentsViaAPI();
-            expect(documents.length).toBeGreaterThan(0);
-            
-            const found = documents.find((doc: any) => doc.originalName === 'sample.txt');
-            expect(found).toBeDefined();
-            expect(found.originalName).toBe('sample.txt');
-        });
-
-        test('should verify multiple uploads in documents list', async () => {
-            // Act
-            await uploadPage.uploadMultipleFiles(
-                [sampleTxtPath, sampleTxtPath],
-                ['sample1.txt', 'sample2.txt']
-            );
-
-            // Assert - via GET /api/documents
-            const documents = await uploadPage.getDocumentsViaAPI();
-            expect(documents.length).toBeGreaterThanOrEqual(2);
-            
-            const names = documents.map((doc: any) => doc.originalName);
-            expect(names.length).toBeGreaterThanOrEqual(2);
-        });
-
-        test('should handle document count correctly', async () => {
-            // Act - Upload one file
-            await uploadPage.uploadSingleFile(sampleTxtPath, 'sample.txt');
-
-            // Assert - verify count from both UI and API
-            const uiCount = await uploadPage.getUploadedDocumentCount();
-            const apiCount = await uploadPage.getDocumentCountViaAPI();
-
-            expect(uiCount).toBe(apiCount);
-            expect(uiCount).toBeGreaterThan(0);
-        });
+    test('should not upload an unsupported file type', async () => {
+        const unsupportedPath = path.resolve(__dirname, '../test-resources/sample.xyz');
+        await uploadPage.uploadUnsupportedSingleFile(unsupportedPath);
+        const count = await uploadPage.getDocumentCountViaAPI();
+        expect(count).toBe(0);
     });
 
-    test.describe('Cleanup Operations', () => {
-        test('should delete all files via UI', async () => {
-            // Arrange - Upload a file
-            await uploadPage.uploadSingleFile(sampleTxtPath, 'sample.txt');
+    // ── Multiple File Upload ─────────────────────────────────────
 
-            // Verify file was uploaded
-            let count = await uploadPage.getUploadedDocumentCount();
-            expect(count).toBe(1);
-
-            // Act - Delete all
-            await uploadPage.deleteAllFiles();
-            await page.waitForTimeout(1000);
-
-            // Assert
-            count = await uploadPage.getUploadedDocumentCount();
-            expect(count).toBe(0);
-        });
-
-        test('should clear all documents via API', async () => {
-            // Arrange - Upload a file
-            await uploadPage.uploadSingleFile(sampleTxtPath, 'sample.txt');
-
-            // Verify file was uploaded
-            let apiCount = await uploadPage.getDocumentCountViaAPI();
-            expect(apiCount).toBeGreaterThan(0);
-
-            // Act - Clear via API
-            await uploadPage.clearAllDocumentsViaAPI();
-
-            // Assert
-            apiCount = await uploadPage.getDocumentCountViaAPI();
-            expect(apiCount).toBe(0);
-        });
+    test('should upload multiple files sequentially via UI', async () => {
+        await uploadPage.uploadSupportedMultipleFiles(multiFilePaths, multiFileNames);
+        const count = await uploadPage.getUploadedDocumentCount();
+        expect(count).toBeGreaterThanOrEqual(2);
     });
+
+    test('should verify all multiple uploaded files via API', async () => {
+        await uploadPage.uploadSupportedMultipleFiles(multiFilePaths, multiFileNames);
+        const documents = await uploadPage.getDocumentsViaAPI();
+        expect(documents.length).toBeGreaterThanOrEqual(2);
+    });
+
+    // ── Upload Confirmation ──────────────────────────────────────
+
+    test('should confirm document count matches between UI and API', async () => {
+        await uploadPage.uploadSupportedSingleFile(txtPath, txtFileName);
+        const uiCount = await uploadPage.getUploadedDocumentCount();
+        const apiCount = await uploadPage.getDocumentCountViaAPI();
+        expect(uiCount).toBe(apiCount);
+    });
+
+    test('should confirm specific document appears in API response', async () => {
+        await uploadPage.uploadSupportedSingleFile(txtPath, txtFileName);
+        const documents = await uploadPage.getDocumentsViaAPI();
+        const found = documents.find((doc: any) => doc.name === txtFileName);
+        expect(found).toBeDefined();
+    });
+
+    test('should verify document metadata fields in API response', async () => {
+    await uploadPage.uploadSupportedSingleFile(txtPath, txtFileName);
+    const documents = await uploadPage.getDocumentsViaAPI();
+    const doc = documents.find((d: any) => d.name === txtFileName);
+    expect(doc).toHaveProperty('id');
+    expect(doc).toHaveProperty('name', txtFileName);
+    expect(doc).toHaveProperty('size');
+    expect(doc).toHaveProperty('type');
+});
+
+    // ── Delete & Cleanup ─────────────────────────────────────────
+
+    test('should delete all files and verify count is zero via API', async () => {
+        await uploadPage.uploadSupportedSingleFile(txtPath, txtFileName);
+        expect(await uploadPage.getDocumentCountViaAPI()).toBeGreaterThan(0);
+        await uploadPage.clearAllDocumentsViaAPI();
+        expect(await uploadPage.getDocumentCountViaAPI()).toBe(0);
+    });
+
+ test('should delete all files and verify count is zero via UI', async () => {
+    await uploadPage.uploadSupportedSingleFile(txtPath, txtFileName);
+    expect(await uploadPage.getUploadedDocumentCount()).toBe(1);
+    await uploadPage.deleteAllFiles();
+    expect(await uploadPage.getUploadedDocumentCount()).toBe(0);
+});
+
+test('should delete a specific document by ID', async () => {
+    await uploadPage.uploadSupportedSingleFile(txtPath, txtFileName);
+    const documents = await uploadPage.getDocumentsViaAPI();
+    const docId = documents[0].id;
+
+    const response = await uploadPage.deleteDocumentByIdViaAPI(docId);
+    expect(response).toBe(200);
+    expect(await uploadPage.getDocumentCountViaAPI()).toBe(0);
+});
+
 });

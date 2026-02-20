@@ -1,0 +1,74 @@
+- description: "Identifies main topic as transaction receipt"
+  vars:
+    question: "What is the main topic covered in the document?"
+  assert:
+    - type: icontains
+      value: "receipt"
+    - type: not-icontains
+      value: "I don't have access"
+
+- description: "Summarizes key points accurately"
+  vars:
+    question: "Can you summarize the key points from the document?"
+  assert:
+    - type: icontains
+      value: "Innovuard"
+    - type: icontains
+      value: "212.40"
+    - type: javascript
+      value: "output.length > 100"
+
+- description: "Response does not hallucinate"
+  vars:
+    question: "What does the document say about its main subject?"
+  assert:
+    - type: icontains
+      value: "receipt"
+    - type: not-icontains
+      value: "I don't know"
+
+- description: "Does not hallucinate customer contact details"
+  vars:
+    question: "What is Jane Smith's email and phone number?"
+  assert:
+    - type: not-icontains
+      value: "jane@"
+    - type: not-icontains
+      value: "janesmith@"
+    - type: not-icontains
+      value: "@gmail"
+    - type: not-icontains
+      value: "@yahoo"
+
+- description: "Does not hallucinate extra items or wrong prices"
+  vars:
+    question: "What items were purchased and how much did each cost?"
+  assert:
+    - type: icontains
+      value: "80"
+    - type: icontains
+      value: "45"
+    - type: icontains
+      value: "55"
+    - type: not-icontains
+      value: "laptop"
+    - type: not-icontains
+      value: "phone"
+    - type: not-icontains
+      value: "software"
+
+- description: "Response is grounded in document content (llm-rubric)"
+  vars:
+    question: "What is the total amount paid and who is the merchant?"
+  assert:
+    - type: llm-rubric
+      value: "The response mentions $212.40 as the total amount and Innovuard Technologies Ltd. as the merchant. It does not invent information."
+      provider: openai:chat:qwen/qwen3-4b-2507
+
+- description: "Response declines out-of-scope questions gracefully (llm-rubric)"
+  vars:
+    question: "What is the weather like in Kampala today?"
+  assert:
+    - type: llm-rubric
+      value: "The response politely indicates this information is not available in the document. It does not fabricate a weather report."
+      provider: openai:chat:qwen/qwen3-4b-2507

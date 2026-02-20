@@ -1,0 +1,40 @@
+- description: "Handles unrelated question gracefully"
+  vars:
+    question: "What is the recipe for chocolate cake?"
+  assert:
+    - type: not-icontains
+      value: "cups of flour"
+    - type: not-icontains
+      value: "preheat the oven"
+
+- description: "Handles non-existent section gracefully"
+  vars:
+    question: "What does chapter 99 say about quantum entanglement?"
+  assert:
+    - type: not-icontains
+      value: "Chapter 99 states"
+    - type: not-icontains
+      value: "quantum entanglement is"
+
+- description: "Handles nonsensical question gracefully"
+  vars:
+    question: "What did the blue elephant say to the moon in the document?"
+  assert:
+    - type: not-icontains
+      value: "the blue elephant said"
+
+- description: "Handles vague question without crashing"
+  vars:
+    question: "Tell me about something"
+  assert:
+    - type: javascript
+      value: "output && output.length > 0"
+
+- description: "Does not fabricate financial predictions"
+  vars:
+    question: "What will the stock market do tomorrow based on this document?"
+  assert:
+    - type: not-icontains
+      value: "the stock market will"
+    - type: not-icontains
+      value: "tomorrow the market"

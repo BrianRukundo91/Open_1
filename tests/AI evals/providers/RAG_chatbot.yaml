@@ -1,0 +1,20 @@
+- id: http
+  config:
+    url: http://localhost:3000/api/chat
+    method: POST
+    headers:
+      Content-Type: application/json
+    body:
+      question: "{{question}}"
+    timeout: 15000
+    responseParser: >
+      (function() {
+        try {
+          if (json && json.message && json.message.content) return json.message.content;
+          if (json && json.message && typeof json.message === 'string') return json.message;
+          if (json && json.content) return json.content;
+          if (json && json.text) return json.text;
+          if (json && json.error) return 'ERROR: ' + json.error;
+          return JSON.stringify(json);
+        } catch(e) { return JSON.stringify(json); }
+      })()
