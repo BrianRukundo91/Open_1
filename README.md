@@ -1,4 +1,4 @@
-# SDET Challenge - Document Chat Application Test Suite
+Document Chat Application Test Suite
 
 ## Overview
 
