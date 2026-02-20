@@ -1,0 +1,2 @@
+Count before upload: 0
+Count after upload: 1

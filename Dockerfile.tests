@@ -1,0 +1,12 @@
+FROM mcr.microsoft.com/playwright:v1.58.2-jammy
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+RUN mkdir -p reports/allure-results reports/allure-report reports/playwright-html
+
+CMD ["npx", "playwright", "test", "--project=chromium"]

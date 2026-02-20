@@ -1,0 +1,18 @@
+description: RAG Chatbot Evaluation - Response Accuracy & Relevance
+
+prompts:
+  - file://./tests/AI evals/prompts/user_question.txt
+
+providers:
+  - file://./tests/AI evals/providers/RAG_chatbot.yaml
+
+tests:
+  - file://./tests/AI evals/testLogic/relevant_answers.yaml
+  - file://./tests/AI evals/testLogic/accuracy.yaml
+  - file://./tests/AI evals/testLogic/fallback.yaml
+  - file://./tests/AI evals/testLogic/performance.yaml
+  - file://./tests/AI evals/testLogic/security.yaml
+
+evaluateOptions:
+  maxConcurrency: 1
+  delay: 5000

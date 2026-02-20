@@ -1,0 +1,11 @@
+TRANSACTION RECEIPT
+Merchant: Innovuard Technologies Ltd. Address: 14 Innovation Drive, Kampala, Uganda
+Email: billing@innovuard.example Phone: +256 700 000000
+Transaction ID: TXN-2026-00045 Date: 19 February 2026 Customer: Jane Smith
+Payment Method: Mobile Money (MTN) Reference: MM28473910
+Items Purchased:
+  1. Asset Registration Service — $80.00
+  2. Equipment Tagging Kit — $45.00
+  3. Annual Maintenance Plan — $55.00
+Subtotal: $180.00 Tax (18%): $32.40 TOTAL PAID: $212.40 Status: PAID
+Notes: This is a fictional transaction receipt generated for QA testing and RAG ingestion.
