@@ -9,7 +9,7 @@ export class DocumentUploadPage {
         this.page = page;
     }
 
-    // ── UI Helpers ──────────────────────────────────────────────
+    // ── UI Helpers 
 
     /**
      * Upload a single supported file via UI
@@ -105,7 +105,7 @@ async deleteAllFiles(): Promise<void> {
         }
     }
 
-    // ── API Helpers ─────────────────────────────────────────────
+    // ── API Helpers 
 
     /**
      * Get all documents from API

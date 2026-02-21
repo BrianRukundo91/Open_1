@@ -7,7 +7,7 @@ export class ChatPage {
         this.page = page;
     }
 
-    // ── UI Helpers ──────────────────────────────────────────────
+    // ── UI Helpers 
 
     /**
      * Verify the chat interface is visible and ready for input
@@ -52,7 +52,7 @@ async getLatestResponseFromDOM(): Promise<string> {
         return await this.page.locator('div.rounded-2xl.px-4.py-3').count();
     }
 
-    // ── API Helpers ─────────────────────────────────────────────
+    // ── API Helpers 
 
     /**
      * Get all messages from chat history via API
@@ -103,7 +103,7 @@ async getLatestResponseFromDOM(): Promise<string> {
         expect(docs.length).toBeGreaterThan(0);
     }
 
-    // ── High-Level Actions ───────────────────────────────────────
+    // ── High-Level Actions 
 
     /**
      * Ask a single question and assert the response contains expected text

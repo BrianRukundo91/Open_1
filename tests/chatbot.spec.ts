@@ -5,13 +5,13 @@ import { DocumentUploadPage } from '../page-objects/DocumentUploadPage';
 import { ChatPage } from '../page-objects/ChatPage';
 
 
-// ── Constants ────────────────────────────────────────────────────
+// ── Constants 
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const receiptTxtPath = path.join(__dirname, '../test-resources/transaction_receipt.txt');
 const receiptFileName = 'transaction_receipt.txt';
 
-// ── Test Data ────────────────────────────────────────────────────
+// ── Test Data 
 
 const questionsAndAnswers = [
     { question: 'What is the total amount paid?',      expected: '$212.40'          },
@@ -28,11 +28,11 @@ const conceptQuestions = [
     'What is the tax rate applied?',
 ];
 
-// ── Suite Config ─────────────────────────────────────────────────
+// ── Suite Config 
 
 test.describe.configure({ mode: 'serial' });
 
-// ── Tests ────────────────────────────────────────────────────────
+// ── Tests 
 
 test.describe('AI Chatbot - Response Verification', () => {
     let documentUploadPage: DocumentUploadPage;
