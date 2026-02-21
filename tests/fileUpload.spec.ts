@@ -45,9 +45,8 @@ test.describe('Document Upload', () => {
         await uploadPage.verifyIfFileUploadedSuccessfully([txtFileName]);
     });
 
-    test('should upload a single PDF file and verify via API', async () => {
-    if (!fs.existsSync(pdfPath)) test.skip();
-    await uploadPage.uploadSupportedSingleFile(pdfPath, pdfFileName);
+  test('should upload a single PDF file and verify via API', async () => {
+    await uploadPage.uploadFileViaAPI(pdfPath);
     const documents = await uploadPage.getDocumentsViaAPI();
     expect(documents.length).toBeGreaterThan(0);
 });

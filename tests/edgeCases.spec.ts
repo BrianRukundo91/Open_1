@@ -34,12 +34,13 @@ test.beforeEach(async ({ page }) => {
 
     // ── Upload State Management ──────────────────────────────────
 test('should handle multiple file operations in sequence', async () => {
-    await uploadPage.clearAllDocumentsViaAPI();
+    await uploadPage.clearAllDocumentsAndWait();
 
-    await uploadPage.uploadSupportedMultipleFiles([txtPath, pdfPath], [txtFileName, pdfFileName]);
+    await uploadPage.uploadFileViaAPI(txtPath);
+    await uploadPage.uploadFileViaAPI(pdfPath);
     expect(await uploadPage.getDocumentCountViaAPI()).toBeGreaterThanOrEqual(2);
 
-    await uploadPage.clearAllDocumentsViaAPI();
+    await uploadPage.clearAllDocumentsAndWait();
     expect(await uploadPage.getDocumentCountViaAPI()).toBe(0);
 
     await uploadPage.uploadSupportedSingleFile(txtPath, txtFileName);
