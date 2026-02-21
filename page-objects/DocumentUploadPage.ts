@@ -27,7 +27,7 @@ export class DocumentUploadPage {
     async uploadSupportedMultipleFiles(filePaths: string[], fileNames?: string[]): Promise<void> {
         for (const filePath of filePaths) {
             await this.uploadSupportedSingleFile(filePath);
-            await this.page.waitForTimeout(1000);
+            await this.page.waitForTimeout(3000);
         }
     }
 
