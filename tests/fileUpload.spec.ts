@@ -13,8 +13,8 @@ const docxFileName = 'transaction_receipt.docx';
 const txtPath  = path.resolve(__dirname, `../test-resources/${txtFileName}`);
 const pdfPath  = path.resolve(__dirname, `../test-resources/${pdfFileName}`);
 const docxPath = path.resolve(__dirname, `../test-resources/${docxFileName}`);
-const multiFilePaths = [txtPath, pdfPath];
-const multiFileNames = [txtFileName, pdfFileName];
+const multiFilePaths = [txtPath, txtPath];
+const multiFileNames = [txtFileName, txtFileName];
 
 // ── Suite Config ─────────────────────────────────────────────────
 

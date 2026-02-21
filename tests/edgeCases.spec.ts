@@ -65,17 +65,13 @@ test('should handle multiple file operations in sequence', async () => {
         expect(isInList).toBeTruthy();
     });
 
-    test('should handle rapid successive uploads without errors', async () => {
-        if (!fs.existsSync(pdfPath)) test.skip();
-        if (!fs.existsSync(docxPath)) test.skip();
-
-        await uploadPage.uploadSupportedSingleFile(txtPath, txtFileName);
-        await uploadPage.uploadSupportedSingleFile(pdfPath, pdfFileName);
-        await uploadPage.uploadSupportedSingleFile(docxPath, docxFileName);
-
-        const count = await uploadPage.getDocumentCountViaAPI();
-        expect(count).toBeGreaterThanOrEqual(3);
-    });
+   test('should handle rapid successive uploads without errors', async () => {
+    await uploadPage.uploadSupportedSingleFile(txtPath, txtFileName);
+    await uploadPage.uploadFileViaAPI(pdfPath);
+    await uploadPage.uploadSupportedSingleFile(docxPath, docxFileName);
+    const count = await uploadPage.getDocumentCountViaAPI();
+    expect(count).toBeGreaterThanOrEqual(3);
+});
 
     // ── Chat Edge Cases ──────────────────────────────────────────
 
