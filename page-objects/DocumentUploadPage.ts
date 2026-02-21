@@ -18,7 +18,7 @@ export class DocumentUploadPage {
         const fileInput = this.page.locator('input[type="file"]').first();
         await fileInput.waitFor({ state: 'attached', timeout: 5000 });
         await fileInput.setInputFiles(filePath);
-        await this.page.waitForTimeout(5000);
+        await this.page.waitForTimeout(6000);
     }
 
     /**
