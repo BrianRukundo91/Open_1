@@ -111,13 +111,13 @@ async deleteAllFiles(): Promise<void> {
      * Get all documents from API
      */
     async getDocumentsViaAPI(): Promise<any[]> {
-        const apiContext = await request.newContext({ baseURL: 'http://localhost:3000' });
-        const response = await apiContext.get('/api/documents');
-        expect(response.ok()).toBeTruthy();
-        const data = await response.json();
-        await apiContext.dispose();
-        return data.documents || [];
-    }
+    const apiContext = await request.newContext({ baseURL: 'http://localhost:3000' });
+    const response = await apiContext.get('/api/documents');
+    expect(response.ok()).toBeTruthy();
+    const data = await response.json().catch(() => ({ documents: [] }));
+    await apiContext.dispose();
+    return data.documents || [];
+}
 
     /**
      * Get document count from API

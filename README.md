@@ -204,6 +204,25 @@ docker-compose down
 **Note on AI Evals in Docker:**
 The promptfoo AI evals are intentionally kept outside Docker and run locally via `./setup.sh`. This is because the `llm-rubric` assertions use a local Qwen model running in LM Studio as a judge — LM Studio cannot run inside a container. The Playwright tests are the appropriate pipeline to containerize since they have no local dependencies.
 
+
+## CI/CD Pipeline
+
+Tests run automatically on every push and pull request via GitHub Actions.
+
+**What runs in CI:**
+- All 37 Playwright tests against a live instance of the application
+- Allure and Playwright HTML reports are generated and uploaded as artifacts
+
+**What doesn't run in CI:**
+- promptfoo AI evals — intentionally excluded due to LM Studio's local LLM judge dependency and Gemini API rate limits. In a production setup this would be solved by using a hosted judge model and a paid Gemini tier.
+
+**Viewing reports after a run:**
+1. Go to your GitHub repo → Actions
+2. Click any completed workflow run
+3. Download `allure-report` or `playwright-report` from the Artifacts section
+
+**Note on PDF uploads in CI:**
+PDF processing via the browser UI behaves differently on Linux CI runners due to how `pdf-parse` handles binary files. PDF upload tests use the API endpoint directly in CI to isolate file processing from browser behavior — a deliberate environment-aware testing decision.
 ---
 
 ## Bugs Found

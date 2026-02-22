@@ -1,0 +1,46 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list [ref=e4]:
+      - listitem [ref=e5]:
+        - generic [ref=e6]:
+          - generic [ref=e7]: Document uploaded
+          - generic [ref=e8]: transaction_receipt.docx is ready for questions
+        - button [ref=e9] [cursor=pointer]:
+          - img [ref=e10]
+  - generic [ref=e14]:
+    - banner [ref=e15]:
+      - generic [ref=e16]:
+        - heading "Document Chat" [level=1] [ref=e17]
+        - paragraph [ref=e18]: AI-powered document Q&A
+      - button [ref=e19] [cursor=pointer]:
+        - img
+    - generic [ref=e21]:
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - generic [ref=e25]:
+            - img [ref=e26]
+            - generic [ref=e29]: "1"
+            - generic [ref=e30]: document
+          - generic [ref=e32]:
+            - generic [ref=e33]: transaction_receipt.docx
+            - button "×" [ref=e34] [cursor=pointer]
+        - generic [ref=e35]:
+          - generic [ref=e36]:
+            - button "Choose File" [ref=e37] [cursor=pointer]
+            - button "Add Document":
+              - img
+              - text: Add Document
+          - button [ref=e38] [cursor=pointer]:
+            - img
+      - generic [ref=e41]:
+        - img [ref=e43]
+        - heading "Start a conversation" [level=3] [ref=e45]
+        - paragraph [ref=e46]: Ask any question about your document and get instant AI-powered answers
+      - generic [ref=e48]:
+        - textbox "Ask a question about your document..." [ref=e49]
+        - button [disabled]:
+          - img
+```

@@ -1,86 +1,86 @@
-<testsuites id="" name="" tests="37" failures="0" skipped="0" errors="0" time="284.131489">
-<testsuite name="chatbot.spec.ts" timestamp="2026-02-21T09:41:22.337Z" hostname="chromium" tests="10" failures="0" skipped="0" time="86.897" errors="0">
-<testcase name="AI Chatbot - Response Verification › should load chat interface and be ready for input" classname="chatbot.spec.ts" time="6.232">
+<testsuites id="" name="" tests="37" failures="0" skipped="0" errors="0" time="324.42844899999994">
+<testsuite name="chatbot.spec.ts" timestamp="2026-02-22T12:54:17.615Z" hostname="chromium" tests="10" failures="0" skipped="0" time="101.281" errors="0">
+<testcase name="AI Chatbot - Response Verification › should load chat interface and be ready for input" classname="chatbot.spec.ts" time="7.586">
 </testcase>
-<testcase name="AI Chatbot - Response Verification › should send a message without errors" classname="chatbot.spec.ts" time="5.931">
+<testcase name="AI Chatbot - Response Verification › should send a message without errors" classname="chatbot.spec.ts" time="7.655">
 </testcase>
-<testcase name="AI Chatbot - Response Verification › should respond to a relevant question about document content" classname="chatbot.spec.ts" time="5.901">
+<testcase name="AI Chatbot - Response Verification › should respond to a relevant question about document content" classname="chatbot.spec.ts" time="7.289">
 </testcase>
-<testcase name="AI Chatbot - Response Verification › should answer specific questions about the document accurately" classname="chatbot.spec.ts" time="27.22">
+<testcase name="AI Chatbot - Response Verification › should answer specific questions about the document accurately" classname="chatbot.spec.ts" time="29.095">
 </testcase>
-<testcase name="AI Chatbot - Response Verification › should handle conceptual questions about the document" classname="chatbot.spec.ts" time="6.3">
+<testcase name="AI Chatbot - Response Verification › should handle conceptual questions about the document" classname="chatbot.spec.ts" time="7.65">
 </testcase>
-<testcase name="AI Chatbot - Response Verification › should verify document is uploaded via API" classname="chatbot.spec.ts" time="5.649">
+<testcase name="AI Chatbot - Response Verification › should verify document is uploaded via API" classname="chatbot.spec.ts" time="7.613">
 </testcase>
-<testcase name="AI Chatbot - Response Verification › should verify AI response contains expected keywords via API" classname="chatbot.spec.ts" time="9.153">
+<testcase name="AI Chatbot - Response Verification › should verify AI response contains expected keywords via API" classname="chatbot.spec.ts" time="10.39">
 </testcase>
-<testcase name="AI Chatbot - Response Verification › should retrieve chat history via API after conversation" classname="chatbot.spec.ts" time="6.104">
+<testcase name="AI Chatbot - Response Verification › should retrieve chat history via API after conversation" classname="chatbot.spec.ts" time="7.644">
 </testcase>
-<testcase name="AI Chatbot - Response Verification › should verify messages API returns correct structure with user and AI messages" classname="chatbot.spec.ts" time="8.296">
+<testcase name="AI Chatbot - Response Verification › should verify messages API returns correct structure with user and AI messages" classname="chatbot.spec.ts" time="9.359">
 </testcase>
-<testcase name="AI Chatbot - Response Verification › should track message count increasing after each question" classname="chatbot.spec.ts" time="6.111">
-</testcase>
-</testsuite>
-<testsuite name="edgeCases.spec.ts" timestamp="2026-02-21T09:41:22.337Z" hostname="chromium" tests="14" failures="0" skipped="0" time="106.748" errors="0">
-<testcase name="Edge Cases › should handle multiple file operations in sequence" classname="edgeCases.spec.ts" time="18.358">
-</testcase>
-<testcase name="Edge Cases › should handle duplicate file upload gracefully" classname="edgeCases.spec.ts" time="10.791">
-</testcase>
-<testcase name="Edge Cases › should upload file directly via API and verify it appears in UI" classname="edgeCases.spec.ts" time="1.852">
-</testcase>
-<testcase name="Edge Cases › should handle rapid successive uploads without errors" classname="edgeCases.spec.ts" time="16.052">
-</testcase>
-<testcase name="Edge Cases › should handle sequential chat questions correctly" classname="edgeCases.spec.ts" time="8.569">
-</testcase>
-<testcase name="Edge Cases › should handle questions with special characters" classname="edgeCases.spec.ts" time="9.864">
-</testcase>
-<testcase name="Edge Cases › should handle long descriptive questions without errors" classname="edgeCases.spec.ts" time="9.331">
-</testcase>
-<testcase name="Edge Cases › should return 400 error when chat is used without uploading a document" classname="edgeCases.spec.ts" time="0.965">
-</testcase>
-<testcase name="Edge Cases › should return 400 error after all documents are deleted" classname="edgeCases.spec.ts" time="6.425">
-</testcase>
-<testcase name="Edge Cases › should verify API response structure on successful chat" classname="edgeCases.spec.ts" time="7.408">
-</testcase>
-<testcase name="Edge Cases › should return error when asking without documents" classname="edgeCases.spec.ts" time="1.162">
-</testcase>
-<testcase name="Edge Cases › should show correct response in UI after document is uploaded" classname="edgeCases.spec.ts" time="8.555">
-</testcase>
-<testcase name="Edge Cases › should show chat input as visible but return error when no documents uploaded" classname="edgeCases.spec.ts" time="1.105">
-</testcase>
-<testcase name="Edge Cases › should reflect empty document list in UI after deletion" classname="edgeCases.spec.ts" time="6.311">
+<testcase name="AI Chatbot - Response Verification › should track message count increasing after each question" classname="chatbot.spec.ts" time="7">
 </testcase>
 </testsuite>
-<testsuite name="fileUpload.spec.ts" timestamp="2026-02-21T09:41:22.337Z" hostname="chromium" tests="13" failures="0" skipped="0" time="87.837" errors="0">
-<testcase name="Document Upload › should upload a single TXT file and verify via UI" classname="fileUpload.spec.ts" time="5.683">
+<testsuite name="edgeCases.spec.ts" timestamp="2026-02-22T12:54:17.615Z" hostname="chromium" tests="14" failures="0" skipped="0" time="110.527" errors="0">
+<testcase name="Edge Cases › should handle multiple file operations in sequence" classname="edgeCases.spec.ts" time="9.142">
 </testcase>
-<testcase name="Document Upload › should upload a single TXT file and verify via API" classname="fileUpload.spec.ts" time="5.668">
+<testcase name="Edge Cases › should handle duplicate file upload gracefully" classname="edgeCases.spec.ts" time="13.877">
 </testcase>
-<testcase name="Document Upload › should upload a single PDF file and verify via API" classname="fileUpload.spec.ts" time="5.956">
+<testcase name="Edge Cases › should upload file directly via API and verify it appears in UI" classname="edgeCases.spec.ts" time="2.656">
 </testcase>
-<testcase name="Document Upload › should upload a single DOCX file and verify via API" classname="fileUpload.spec.ts" time="5.764">
+<testcase name="Edge Cases › should handle rapid successive uploads without errors" classname="edgeCases.spec.ts" time="14.211">
 </testcase>
-<testcase name="Document Upload › should not upload an unsupported file type" classname="fileUpload.spec.ts" time="1.356">
+<testcase name="Edge Cases › should handle sequential chat questions correctly" classname="edgeCases.spec.ts" time="8.934">
+</testcase>
+<testcase name="Edge Cases › should handle questions with special characters" classname="edgeCases.spec.ts" time="10.12">
+</testcase>
+<testcase name="Edge Cases › should handle long descriptive questions without errors" classname="edgeCases.spec.ts" time="10.678">
+</testcase>
+<testcase name="Edge Cases › should return 400 error when chat is used without uploading a document" classname="edgeCases.spec.ts" time="1.642">
+</testcase>
+<testcase name="Edge Cases › should return 400 error after all documents are deleted" classname="edgeCases.spec.ts" time="7.89">
+</testcase>
+<testcase name="Edge Cases › should verify API response structure on successful chat" classname="edgeCases.spec.ts" time="9.903">
+</testcase>
+<testcase name="Edge Cases › should return error when asking without documents" classname="edgeCases.spec.ts" time="1.823">
+</testcase>
+<testcase name="Edge Cases › should show correct response in UI after document is uploaded" classname="edgeCases.spec.ts" time="9.654">
+</testcase>
+<testcase name="Edge Cases › should show chat input as visible but return error when no documents uploaded" classname="edgeCases.spec.ts" time="1.928">
+</testcase>
+<testcase name="Edge Cases › should reflect empty document list in UI after deletion" classname="edgeCases.spec.ts" time="8.069">
+</testcase>
+</testsuite>
+<testsuite name="fileUpload.spec.ts" timestamp="2026-02-22T12:54:17.615Z" hostname="chromium" tests="13" failures="0" skipped="0" time="109.551" errors="0">
+<testcase name="Document Upload › should upload a single TXT file and verify via UI" classname="fileUpload.spec.ts" time="7.051">
+</testcase>
+<testcase name="Document Upload › should upload a single TXT file and verify via API" classname="fileUpload.spec.ts" time="7.513">
+</testcase>
+<testcase name="Document Upload › should upload a single PDF file and verify via API" classname="fileUpload.spec.ts" time="2.146">
+</testcase>
+<testcase name="Document Upload › should upload a single DOCX file and verify via API" classname="fileUpload.spec.ts" time="7.227">
+</testcase>
+<testcase name="Document Upload › should not upload an unsupported file type" classname="fileUpload.spec.ts" time="1.682">
 <system-out>
 <![CDATA[File upload blocked as expected for unsupported file type
 ]]>
 </system-out>
 </testcase>
-<testcase name="Document Upload › should upload multiple files sequentially via UI" classname="fileUpload.spec.ts" time="12.714">
+<testcase name="Document Upload › should upload multiple files sequentially via UI" classname="fileUpload.spec.ts" time="18.985">
 </testcase>
-<testcase name="Document Upload › should verify all multiple uploaded files via API" classname="fileUpload.spec.ts" time="13.274">
+<testcase name="Document Upload › should verify all multiple uploaded files via API" classname="fileUpload.spec.ts" time="20.104">
 </testcase>
-<testcase name="Document Upload › should confirm document count matches between UI and API" classname="fileUpload.spec.ts" time="5.677">
+<testcase name="Document Upload › should confirm document count matches between UI and API" classname="fileUpload.spec.ts" time="7.418">
 </testcase>
-<testcase name="Document Upload › should confirm specific document appears in API response" classname="fileUpload.spec.ts" time="5.678">
+<testcase name="Document Upload › should confirm specific document appears in API response" classname="fileUpload.spec.ts" time="7.373">
 </testcase>
-<testcase name="Document Upload › should verify document metadata fields in API response" classname="fileUpload.spec.ts" time="7.277">
+<testcase name="Document Upload › should verify document metadata fields in API response" classname="fileUpload.spec.ts" time="7.346">
 </testcase>
-<testcase name="Document Upload › should delete all files and verify count is zero via API" classname="fileUpload.spec.ts" time="5.873">
+<testcase name="Document Upload › should delete all files and verify count is zero via API" classname="fileUpload.spec.ts" time="7.357">
 </testcase>
-<testcase name="Document Upload › should delete all files and verify count is zero via UI" classname="fileUpload.spec.ts" time="6.844">
+<testcase name="Document Upload › should delete all files and verify count is zero via UI" classname="fileUpload.spec.ts" time="7.85">
 </testcase>
-<testcase name="Document Upload › should delete a specific document by ID" classname="fileUpload.spec.ts" time="6.073">
+<testcase name="Document Upload › should delete a specific document by ID" classname="fileUpload.spec.ts" time="7.499">
 </testcase>
 </testsuite>
 </testsuites>
