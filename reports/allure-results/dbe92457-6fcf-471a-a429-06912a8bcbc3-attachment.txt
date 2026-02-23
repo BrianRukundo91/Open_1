@@ -1,0 +1,1 @@
+File upload blocked as expected for unsupported file type

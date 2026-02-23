@@ -117,10 +117,17 @@ async getLatestResponseFromDOM(): Promise<string> {
     /**
      * Ask multiple questions and assert each response (soft assertions)
      */
-  async askMultipleQuestions(questionsAndAnswers: Array<{ question: string; expected: string }>): Promise<void> {
+async askMultipleQuestions(questionsAndAnswers: Array<{ question: string; expected: string }>): Promise<void> {
     for (const { question, expected } of questionsAndAnswers) {
         const beforeCount = await this.page.locator('div.rounded-2xl.px-4.py-3.bg-card').count();
+        
         await this.sendMessage(question);
+
+        await this.page.waitForSelector('[data-testid="loading-indicator"]', 
+            { state: 'visible', timeout: 10000 });
+
+        await this.page.waitForSelector('[data-testid="loading-indicator"]', 
+            { state: 'hidden', timeout: 60000 });
 
         await this.page.waitForFunction(
             (count) => document.querySelectorAll('div.rounded-2xl.px-4.py-3.bg-card').length > count,
@@ -129,7 +136,6 @@ async getLatestResponseFromDOM(): Promise<string> {
         );
 
         expect.soft(await this.getLatestResponseFromDOM()).toContain(expected);
-        await this.page.waitForTimeout(3000);
     }
 }
 

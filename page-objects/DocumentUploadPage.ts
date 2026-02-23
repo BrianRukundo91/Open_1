@@ -17,19 +17,22 @@ export class DocumentUploadPage {
     async uploadSupportedSingleFile(filePath: string, fileName?: string): Promise<void> {
         const fileInput = this.page.locator('input[type="file"]').first();
         await fileInput.waitFor({ state: 'attached', timeout: 5000 });
-        await fileInput.setInputFiles(filePath);
-        await this.page.waitForTimeout(6000);
+      await fileInput.setInputFiles(filePath);
+await this.page.waitForSelector(
+    'div.text-sm.font-semibold:has-text("Document uploaded")',
+    { timeout: 10000 }
+); // waits for actual confirmation
     }
 
     /**
      * Upload multiple supported files sequentially via UI
      */
     async uploadSupportedMultipleFiles(filePaths: string[], fileNames?: string[]): Promise<void> {
-        for (const filePath of filePaths) {
-            await this.uploadSupportedSingleFile(filePath);
-            await this.page.waitForTimeout(3000);
-        }
+    for (const filePath of filePaths) {
+        await this.uploadSupportedSingleFile(filePath);
+        await this.page.waitForTimeout(1000);
     }
+}
 
     /**
      * Upload an unsupported file and expect it to fail gracefully

@@ -1,3 +1,5 @@
+![Playwright Tests](https://github.com/BrianRukundo91/Open_1/actions/workflows/playwright.yml/badge.svg)
+
 Document Chat Application Test Suite
 
 ## Overview

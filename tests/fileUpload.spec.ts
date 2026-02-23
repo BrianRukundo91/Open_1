@@ -102,9 +102,11 @@ test.describe('Document Upload', () => {
     expect(doc).toHaveProperty('name', txtFileName);
     expect(doc).toHaveProperty('size');
     expect(doc).toHaveProperty('type');
+
 });
 
-    // ── Delete & Cleanup ─────────────────────────────────────────
+ 
+// ── Delete & Cleanup ─────────────────────────────────────────
 
     test('should delete all files and verify count is zero via API', async () => {
         await uploadPage.uploadSupportedSingleFile(txtPath, txtFileName);
