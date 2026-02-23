@@ -1,0 +1,87 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - heading "Document Chat" [level=1] [ref=e6]
+        - paragraph [ref=e7]: AI-powered document Q&A
+      - button [ref=e8] [cursor=pointer]:
+        - img
+    - generic [ref=e10]:
+      - generic [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e14]:
+            - img [ref=e15]
+            - generic [ref=e18]: "1"
+            - generic [ref=e19]: document
+          - generic [ref=e21]:
+            - generic [ref=e22]: transaction_receipt.txt
+            - button "×" [ref=e23] [cursor=pointer]
+        - generic [ref=e24]:
+          - generic [ref=e25]:
+            - button "Choose File" [ref=e26] [cursor=pointer]
+            - button "Add Document":
+              - img
+              - text: Add Document
+          - button [ref=e27] [cursor=pointer]:
+            - img
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - img [ref=e33]
+          - generic [ref=e36]:
+            - paragraph [ref=e38]: What is the total amount paid?
+            - generic [ref=e39]: 09:21 PM
+        - generic [ref=e40]:
+          - img [ref=e42]
+          - generic [ref=e45]:
+            - paragraph [ref=e47]: Based on the document, the total amount paid is **$212.40**.
+            - generic [ref=e48]: 09:21 PM
+        - generic [ref=e49]:
+          - img [ref=e51]
+          - generic [ref=e54]:
+            - paragraph [ref=e56]: What is the transaction status?
+            - generic [ref=e57]: 09:21 PM
+        - generic [ref=e58]:
+          - img [ref=e60]
+          - generic [ref=e63]:
+            - paragraph [ref=e65]: The transaction status is PAID.
+            - generic [ref=e66]: 09:21 PM
+        - generic [ref=e67]:
+          - img [ref=e69]
+          - generic [ref=e72]:
+            - paragraph [ref=e74]: What is the transaction date?
+            - generic [ref=e75]: 09:21 PM
+        - generic [ref=e76]:
+          - img [ref=e78]
+          - generic [ref=e81]:
+            - paragraph [ref=e83]: The transaction date is 19 February 2026.
+            - generic [ref=e84]: 09:21 PM
+        - generic [ref=e85]:
+          - img [ref=e87]
+          - generic [ref=e90]:
+            - paragraph [ref=e92]: How many services were purchased?
+            - generic [ref=e93]: 09:21 PM
+        - generic [ref=e94]:
+          - img [ref=e96]
+          - generic [ref=e99]:
+            - paragraph [ref=e101]: Two services were purchased.
+            - generic [ref=e102]: 09:21 PM
+        - generic [ref=e103]:
+          - img [ref=e105]
+          - generic [ref=e108]:
+            - paragraph [ref=e110]: What is the reference number?
+            - generic [ref=e111]: 09:21 PM
+        - generic [ref=e112]:
+          - img [ref=e114]
+          - generic [ref=e117]:
+            - paragraph [ref=e119]: The reference number is MM28473910.
+            - generic [ref=e120]: 09:21 PM
+      - generic [ref=e122]:
+        - textbox "Ask a question about your document..." [ref=e123]
+        - button [disabled]:
+          - img
+```

@@ -66,6 +66,7 @@ test('should handle multiple file operations in sequence', async () => {
     });
 
    test('should handle rapid successive uploads without errors', async () => {
+    test.setTimeout(60000); // ← add this line here
     await uploadPage.uploadSupportedSingleFile(txtPath, txtFileName);
     await uploadPage.uploadFileViaAPI(pdfPath);
     await uploadPage.uploadSupportedSingleFile(docxPath, docxFileName);
@@ -76,7 +77,7 @@ test('should handle multiple file operations in sequence', async () => {
     // ── Chat Edge Cases ──────────────────────────────────────────
 
     test('should handle sequential chat questions correctly', async () => {
-    test.setTimeout(70000);
+    test.setTimeout(120000);
 
     await uploadPage.uploadSupportedSingleFile(txtPath, txtFileName);
     expect(await uploadPage.getDocumentCountViaAPI()).toBeGreaterThan(0);

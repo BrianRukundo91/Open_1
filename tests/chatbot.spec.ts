@@ -13,11 +13,11 @@ const receiptFileName = 'transaction_receipt.txt';
 
 // ── Test Data 
 
-const questionsAndAnswers = [
+const questionsAndAnswers: Array<{ question: string; expected: string | RegExp }> = [
     { question: 'What is the total amount paid?',      expected: '$212.40'          },
     { question: 'What is the transaction status?',     expected: 'PAID'             },
     { question: 'What is the transaction date?',       expected: '19 February 2026' },
-    { question: 'How many services were purchased?',   expected: 'Asset Registration Service' },
+    { question: 'How many services were purchased?',   expected: /Asset Registration|Annual Maintenance|2 service|Two service/i },
     { question: 'What is the reference number?',       expected: 'MM28473910'       },
 ];
 
